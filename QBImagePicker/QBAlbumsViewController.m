@@ -8,7 +8,7 @@
 
 #import "QBAlbumsViewController.h"
 #import <Photos/Photos.h>
-
+#import <PhotosUI/PhotosUI.h>
 // Views
 #import "QBAlbumCell.h"
 
@@ -32,6 +32,7 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
 
 @property (nonatomic, copy) NSArray *fetchResults;
 @property (nonatomic, copy) NSArray *assetCollections;
+@property (nonatomic, strong) UIView *customHeaderView;
 
 @end
 
@@ -47,12 +48,151 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
     PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
     PHFetchResult *userAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
     self.fetchResults = @[smartAlbums, userAlbums];
-    
+    [self setupCustomHeaderView];
     [self updateAssetCollections];
     
     // Register observer
     [[PHPhotoLibrary sharedPhotoLibrary] registerChangeObserver:self];
 }
+
+
+- (void)setupCustomHeaderView {
+    
+    if (@available(iOS 14, *)) {
+        
+        PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatusForAccessLevel:PHAccessLevelReadWrite];
+        if(status != PHAuthorizationStatusLimited) {
+            self.tableView.tableHeaderView = nil;
+        } else {
+            [self addCustomHeaderView];
+        }
+    }
+}
+
+- (void)addCustomHeaderView {
+    
+    if (@available(iOS 14, *)) {
+        
+        if(self.customHeaderView == nil) {
+            // Create an attributed string for the header label
+            NSString *headerText = @"Your Really long asd asdlkjl alskdjlasjl alskdjlkasdjj laksjdajsldjl alskdjlasjd Header Text";
+            NSMutableAttributedString *attributedHeaderText = [[NSMutableAttributedString alloc] initWithString:headerText];
+            
+            // Find the range of the word "Text" and set its color to blue
+            NSRange blueTextRange = [headerText rangeOfString:@"Text"];
+            if (blueTextRange.location != NSNotFound) {
+                [attributedHeaderText addAttribute:NSForegroundColorAttributeName value:[UIColor systemBlueColor] range:blueTextRange];
+                
+                // Get the range excluding the specified range
+                NSRange firstPartRange = NSMakeRange(0, blueTextRange.location);
+                NSRange secondPartRange = NSMakeRange(NSMaxRange(blueTextRange), attributedHeaderText.length - NSMaxRange(blueTextRange));
+                
+                [attributedHeaderText addAttribute:NSForegroundColorAttributeName value:[UIColor systemGrayColor] range:firstPartRange];
+                [attributedHeaderText addAttribute:NSForegroundColorAttributeName value:[UIColor systemGrayColor] range:secondPartRange];
+                
+            }
+            
+            // Set font size and color for the label
+            UIFont *labelFont = [UIFont systemFontOfSize:13.0]; // Adjust the font size as needed
+            [attributedHeaderText addAttribute:NSFontAttributeName value:labelFont range:NSMakeRange(0, headerText.length)];
+            
+            UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+            headerLabel.translatesAutoresizingMaskIntoConstraints = NO;
+            headerLabel.attributedText = attributedHeaderText;
+            headerLabel.numberOfLines = 0; // Allow text to wrap to multiple lines
+            headerLabel.textAlignment = NSTextAlignmentCenter;
+            
+            
+            // Calculate the required height for the label based on the attributed text
+            CGSize labelSize = [headerLabel sizeThatFits:CGSizeMake(self.tableView.frame.size.width - 32, CGFLOAT_MAX)];
+            
+            // Create the header view with a height based on the label size
+            UIView *customHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, labelSize.height + 16)]; // Adjust additional space if needed
+            customHeaderView.backgroundColor = [UIColor systemGray6Color];
+            
+            // Set the frame for the label within the calculated height
+            headerLabel.frame = CGRectMake(16, 8, self.tableView.frame.size.width - 32, labelSize.height);
+            
+            [customHeaderView addSubview:headerLabel];
+            
+            // Set constraints for the label to be centered and dynamically resize
+            [NSLayoutConstraint activateConstraints:@[
+                [headerLabel.topAnchor constraintEqualToAnchor:customHeaderView.topAnchor constant:8],
+                [headerLabel.leadingAnchor constraintEqualToAnchor:customHeaderView.leadingAnchor constant:16],
+                [headerLabel.trailingAnchor constraintEqualToAnchor:customHeaderView.trailingAnchor constant:-16],
+                [headerLabel.bottomAnchor constraintEqualToAnchor:customHeaderView.bottomAnchor constant:-8],
+            ]];
+            
+            // Add UITapGestureRecognizer to respond to the click
+            UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(headerViewTapped)];
+            [customHeaderView addGestureRecognizer:tapGesture];
+            
+            // Enable user interaction for the header view
+            customHeaderView.userInteractionEnabled = YES;
+            self.customHeaderView = customHeaderView;
+        }
+        // Set the customHeaderView as the tableHeaderView
+        self.tableView.tableHeaderView = self.customHeaderView;
+    }
+}
+
+- (void)headerViewTapped {
+        [self showMenu];
+}
+
+
+- (void)showMenu {
+    if (@available(iOS 14, *)) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Manage Access to Photos and Videos"
+                                                                                 message:nil
+                                                                          preferredStyle:UIAlertControllerStyleActionSheet];
+        
+        // Option 1: Select More Photos
+        UIAlertAction *selectMorePhotosAction = [UIAlertAction actionWithTitle:@"Select More Photos"
+                                                                         style:UIAlertActionStyleDefault
+                                                                       handler:^(UIAlertAction * _Nonnull action) {
+            // Handle Select More Photos action
+            NSLog(@"Select More Photos selected");
+            
+            [PHPhotoLibrary.sharedPhotoLibrary presentLimitedLibraryPickerFromViewController:self];
+            
+        }];
+        [selectMorePhotosAction setValue:[self imageWithSystemName:@"checkmark.circle.fill"] forKey:@"image"]; // Add a system checkmark icon
+        [alertController addAction:selectMorePhotosAction];
+        
+        // Option 2: Change Settings
+        UIAlertAction *changeSettingsAction = [UIAlertAction actionWithTitle:@"Change Settings"
+                                                                       style:UIAlertActionStyleDefault
+                                                                     handler:^(UIAlertAction * _Nonnull action) {
+            // Handle Change Settings action
+            NSLog(@"Change Settings selected");
+            NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+            
+            if ([[UIApplication sharedApplication] canOpenURL:settingsURL]) {
+                [[UIApplication sharedApplication] openURL:settingsURL options:@{} completionHandler:nil];
+            }
+        }];
+        [changeSettingsAction setValue:[self imageWithSystemName:@"gearshape.fill"] forKey:@"image"]; // Add a system settings icon
+        [alertController addAction:changeSettingsAction];
+        
+        // Option 3: Cancel
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                               style:UIAlertActionStyleCancel
+                                                             handler:^(UIAlertAction * _Nonnull action) {
+            // Handle Cancel action
+            NSLog(@"Cancel selected");
+        }];
+        [alertController addAction:cancelAction];
+        
+        // Present the alert controller
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
+}
+
+- (UIImage *)imageWithSystemName:(NSString *)systemName {
+    return [UIImage systemImageNamed:systemName];
+}
+
 
 - (void)viewWillAppear:(BOOL)animated
 {
