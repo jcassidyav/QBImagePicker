@@ -442,12 +442,15 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    return 1;
+    return 2;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.fetchResult.count;
+    if(section==0)
+        return self.fetchResult.count;
+    else
+        return 0;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -502,11 +505,11 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 {
+    
     if (kind == UICollectionElementKindSectionFooter) {
         UICollectionReusableView *footerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter
                                                                                   withReuseIdentifier:@"FooterView"
                                                                                          forIndexPath:indexPath];
-        
         // Number of assets
         UILabel *label = (UILabel *)[footerView viewWithTag:1];
         
