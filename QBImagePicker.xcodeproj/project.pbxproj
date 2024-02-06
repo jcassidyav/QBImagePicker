@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		7165E7FE2B6C129C0000ACD2 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7165E7FD2B6C129C0000ACD2 /* Photos.framework */; };
 		7165E8002B6C12A40000ACD2 /* PhotosUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7165E7FF2B6C12A40000ACD2 /* PhotosUI.framework */; };
+		7165E8042B6D262F0000ACD2 /* LimitedAccess.h in Headers */ = {isa = PBXBuildFile; fileRef = 7165E8032B6D262F0000ACD2 /* LimitedAccess.h */; };
+		7165E8062B6D27080000ACD2 /* LimitedAccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 7165E8052B6D27080000ACD2 /* LimitedAccess.m */; };
 		790A850F1AE7D4D9008E2A80 /* QBSlomoIconView.h in Headers */ = {isa = PBXBuildFile; fileRef = 790A850D1AE7D4D9008E2A80 /* QBSlomoIconView.h */; };
 		790A85101AE7D4D9008E2A80 /* QBSlomoIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = 790A850E1AE7D4D9008E2A80 /* QBSlomoIconView.m */; };
 		AA3AD06F1ACF9A3A00BF523E /* QBVideoIconView.h in Headers */ = {isa = PBXBuildFile; fileRef = AA3AD06D1ACF9A3A00BF523E /* QBVideoIconView.h */; };
@@ -85,6 +87,8 @@
 		07A50A481B331A840010E048 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/QBImagePicker.strings; sourceTree = "<group>"; };
 		7165E7FD2B6C129C0000ACD2 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks/Photos.framework; sourceTree = DEVELOPER_DIR; };
 		7165E7FF2B6C12A40000ACD2 /* PhotosUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhotosUI.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/iOSSupport/System/Library/Frameworks/PhotosUI.framework; sourceTree = DEVELOPER_DIR; };
+		7165E8032B6D262F0000ACD2 /* LimitedAccess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LimitedAccess.h; sourceTree = "<group>"; };
+		7165E8052B6D27080000ACD2 /* LimitedAccess.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LimitedAccess.m; sourceTree = "<group>"; };
 		74BB93661B2CE91A0044EB60 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/QBImagePicker.strings; sourceTree = "<group>"; };
 		790A850D1AE7D4D9008E2A80 /* QBSlomoIconView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QBSlomoIconView.h; sourceTree = "<group>"; };
 		790A850E1AE7D4D9008E2A80 /* QBSlomoIconView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QBSlomoIconView.m; sourceTree = "<group>"; };
@@ -179,6 +183,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		7165E8022B6D260E0000ACD2 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				7165E8032B6D262F0000ACD2 /* LimitedAccess.h */,
+				7165E8052B6D27080000ACD2 /* LimitedAccess.m */,
+			);
+			name = Utilities;
+			sourceTree = "<group>";
+		};
 		AA3AD0751ACFA22500BF523E /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -237,6 +250,7 @@
 		AAA8FE051ACDA079002A9710 /* QBImagePicker */ = {
 			isa = PBXGroup;
 			children = (
+				7165E8022B6D260E0000ACD2 /* Utilities */,
 				AAA8FE081ACDA079002A9710 /* QBImagePicker.h */,
 				AA3AD0751ACFA22500BF523E /* Views */,
 				AA3AD0761ACFA23300BF523E /* ViewControllers */,
@@ -344,6 +358,7 @@
 				AAA8FE5B1ACDA554002A9710 /* QBAlbumsViewController.h in Headers */,
 				AA3AD06F1ACF9A3A00BF523E /* QBVideoIconView.h in Headers */,
 				AAA8FE091ACDA079002A9710 /* QBImagePicker.h in Headers */,
+				7165E8042B6D262F0000ACD2 /* LimitedAccess.h in Headers */,
 				AABBF0901ACEDDFF003188A3 /* QBCheckmarkView.h in Headers */,
 				AAA8FE211ACDA090002A9710 /* QBImagePickerController.h in Headers */,
 			);
@@ -527,6 +542,7 @@
 				AA3AD0701ACF9A3A00BF523E /* QBVideoIconView.m in Sources */,
 				790A85101AE7D4D9008E2A80 /* QBSlomoIconView.m in Sources */,
 				AABBF0911ACEDDFF003188A3 /* QBCheckmarkView.m in Sources */,
+				7165E8062B6D27080000ACD2 /* LimitedAccess.m in Sources */,
 				AAF1CA301ACE6E46005F6295 /* QBAssetsViewController.m in Sources */,
 				AAF1CA1B1ACE5467005F6295 /* QBAlbumCell.m in Sources */,
 				AAA8FE221ACDA090002A9710 /* QBImagePickerController.m in Sources */,
