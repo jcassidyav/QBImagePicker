@@ -156,7 +156,7 @@
     }
 }
 
-- (UIImage *)imageWithSystemName:(NSString *)systemName {
+- (UIImage *)imageWithSystemName:(NSString *)systemName API_AVAILABLE(ios(13), macosx(13.1)) {
     return [UIImage systemImageNamed:systemName];
 }
 @end

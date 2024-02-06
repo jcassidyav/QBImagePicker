@@ -578,13 +578,13 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
             UILabel *label = (UILabel *)[limitedView viewWithTag:1];
             
             label.attributedText = _limitedAccess.limitedPrompt;
-            limitedView.backgroundColor = [UIColor systemGray6Color];
+            if (@available(iOS 13, *)) {
+                limitedView.backgroundColor = [UIColor systemGray6Color];
+            }
             
             UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:_limitedAccess action:@selector(showMenu)];
             [limitedView addGestureRecognizer:tapGesture];
-            NSLog(@"COUNT GES %1u" , [limitedView gestureRecognizers].count);
-            
-            
+                        
             // Enable user interaction for the header view
             limitedView.userInteractionEnabled = YES;
             
