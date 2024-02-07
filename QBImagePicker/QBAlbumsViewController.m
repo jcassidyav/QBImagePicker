@@ -61,9 +61,8 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
 - (void)setupCustomHeaderView {
     
     if (@available(iOS 14, *)) {
-       
-        PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatusForAccessLevel:PHAccessLevelReadWrite];
-        if(status != PHAuthorizationStatusLimited) {
+        _limitedAccess = [[LimitedAccess alloc] initWithParentViewController:self prompt:nil];
+        if(!_limitedAccess.isLimitedAccess) {
             self.tableView.tableHeaderView = nil;
         } else {
             [self addCustomHeaderView];
@@ -76,7 +75,6 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
     if (@available(iOS 14, *)) {
         
         if(self.customHeaderView == nil) {
-            _limitedAccess = [[LimitedAccess alloc] initWithParentViewController:self prompt:nil];
             self.customHeaderView = [self.limitedAccess createLimitedAccessViewWithWidth:self.tableView.frame.size.width];
         }
         // Set the customHeaderView as the tableHeaderView
