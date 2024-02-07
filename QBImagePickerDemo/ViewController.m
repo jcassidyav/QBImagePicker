@@ -77,4 +77,8 @@
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
+//- (void)qb_imagePickerControllerDidManageAccess:(QBImagePickerController *)imagePickerController
+//{
+//    NSLog(@"Manage Access.");
+//}
 @end

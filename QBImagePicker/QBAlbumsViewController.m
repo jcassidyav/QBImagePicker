@@ -8,13 +8,14 @@
 
 #import "QBAlbumsViewController.h"
 #import <Photos/Photos.h>
-
+#import <PhotosUI/PhotosUI.h>
 // Views
 #import "QBAlbumCell.h"
 
 // ViewControllers
 #import "QBImagePickerController.h"
 #import "QBAssetsViewController.h"
+#import "LimitedAccess.h"
 
 static CGSize CGSizeScale(CGSize size, CGFloat scale) {
     return CGSizeMake(size.width * scale, size.height * scale);
@@ -32,6 +33,8 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
 
 @property (nonatomic, copy) NSArray *fetchResults;
 @property (nonatomic, copy) NSArray *assetCollections;
+@property (nonatomic, strong) UIView *customHeaderView;
+@property (nonatomic, strong) LimitedAccess *limitedAccess; // Declare a member variable
 
 @end
 
@@ -47,11 +50,36 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
     PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
     PHFetchResult *userAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
     self.fetchResults = @[smartAlbums, userAlbums];
-    
+     [self setupCustomHeaderView];
     [self updateAssetCollections];
     
     // Register observer
     [[PHPhotoLibrary sharedPhotoLibrary] registerChangeObserver:self];
+}
+
+
+- (void)setupCustomHeaderView {
+    
+    if (@available(iOS 14, *)) {
+        _limitedAccess = [[LimitedAccess alloc] initWithParentViewController:self prompt:nil];
+        if(!_limitedAccess.isLimitedAccess) {
+            self.tableView.tableHeaderView = nil;
+        } else {
+            [self addCustomHeaderView];
+        }
+    }
+}
+
+- (void)addCustomHeaderView {
+    
+    if (@available(iOS 14, *)) {
+        
+        if(self.customHeaderView == nil) {
+            self.customHeaderView = [self.limitedAccess createLimitedAccessViewWithWidth:self.tableView.frame.size.width];
+        }
+        // Set the customHeaderView as the tableHeaderView
+        self.tableView.tableHeaderView = self.customHeaderView;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
