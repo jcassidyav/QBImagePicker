@@ -704,9 +704,9 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
     return CGSizeMake(width, width);
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewFlowLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
     if(section == 1){
-        return CGSizeMake(100, 100); // Adjust the size as needed
+        return collectionViewLayout.headerReferenceSize; // Adjust the size as needed
     } else {
         return CGSizeMake(0, 0); // Adjust the size as needed
     }
